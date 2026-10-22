@@ -44,13 +44,14 @@ def fetch_window(start: date, end: date) -> list[dict]:
 Function to download raw exchange rate data for a given date range and save it to local JSON files.
 The data is fetched in windows of up to MAX_DAYS to comply with the NBP API limitations. 
 Each window's data is saved to a separate JSON file in the RAW_DIR directory.
+The files are named using the format "tables_a_{start_date}_{end_date}.json" in date format YYYY-MM-DD
 """
-def download_raw(start: date, end: date) -> None:
-    RAW_DIR.mkdir(parents=True, exist_ok=True)
+def download_raw(start: date, end: date, raw_dir: Path = RAW_DIR) -> None:
+    raw_dir.mkdir(parents=True, exist_ok=True)
     for win_start, win_end in date_windows(start, end):
         logger.info("Downloading %s - %s", win_start, win_end)
         tables = fetch_window(win_start, win_end)
-        path = RAW_DIR / f"tables_a_{win_start}_{win_end}.json"
+        path = raw_dir / f"tables_a_{win_start}_{win_end}.json"
         path.write_text(json.dumps(tables), encoding="utf-8")
 
 
