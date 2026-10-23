@@ -20,6 +20,12 @@ logger = logging.getLogger(__name__)
 
 """
 Generates date windows of up to max_days between start and end dates
+Parameters:
+    start (date): The starting date of the range.
+    end (date): The ending date of the range.
+    max_days (int): The maximum number of days in each window. Defaults to MAX_DAYS.
+Yields:
+    tuple[date, date]: A tuple containing the start and end dates of each window.
 """
 def date_windows(start: date, end: date, max_days: int = MAX_DAYS):
     current = start
@@ -31,6 +37,11 @@ def date_windows(start: date, end: date, max_days: int = MAX_DAYS):
 """
 Fetches exchange rate data from the NBP API for a given date range and returns it as a list of dictionaries.
 If the API returns a 404 status code, an empty list is returned.
+Parameters:
+    start (date): The starting date of the range.
+    end (date): The ending date of the range.
+Returns:
+    list[dict]: A list of dictionaries containing the exchange rate data for the specified date range
 """
 def fetch_window(start: date, end: date) -> list[dict]:
     url = f"{BASE_URL}/{start}/{end}/"
@@ -45,6 +56,10 @@ Function to download raw exchange rate data for a given date range and save it t
 The data is fetched in windows of up to MAX_DAYS to comply with the NBP API limitations. 
 Each window's data is saved to a separate JSON file in the RAW_DIR directory.
 The files are named using the format "tables_a_{start_date}_{end_date}.json" in date format YYYY-MM-DD
+Parameters:
+    start (date): The starting date of the range.
+    end (date): The ending date of the range.
+    raw_dir (Path): The directory where the JSON files will be saved. Defaults to RAW_DIR.
 """
 def download_raw(start: date, end: date, raw_dir: Path = RAW_DIR) -> None:
     raw_dir.mkdir(parents=True, exist_ok=True)

@@ -15,6 +15,10 @@ PROCESSED_FILE = PROCESSED_DIR / "rates.csv"
 logger = logging.getLogger(__name__)
 """
 Load all tables_a_*.json files and combine them into a single list.
+Parameters:
+    raw_dir (Path): The directory containing the raw JSON files. Defaults to RAW_DIR.
+Returns:
+    list[dict]: A list of dictionaries containing the exchange rate data.
 """
 def load_raw(raw_dir: Path = RAW_DIR) -> list[dict]:
     
@@ -37,6 +41,10 @@ The table is saved in a format of 4 columns: date, code, currency, mid
 - code: the currency code (e.g., EUR, USD)
 - currency: the full name of the currency (e.g., Euro, US Dollar)
 - mid: the average exchange rate
+Parameters:
+    tables (list[dict]): The list of dictionaries containing the exchange rate data.
+Returns:
+    pd.DataFrame: The transformed DataFrame.
 """
 def to_dataframe(tables: list[dict]) -> pd.DataFrame:
     try:
@@ -66,6 +74,8 @@ The quality checks on the DataFrame ensure that the data is valid and consistent
 1. Check if the DataFrame is empty.
 2. Check if there are any missing or non-positive exchange rates in the 'mid' column.
 3. Check for duplicate rows based on the combination of 'date' and 'code'.
+Parameters:
+    df (pd.DataFrame): The DataFrame to validate.
 """
 def validate(df: pd.DataFrame) -> None:
     if df.empty:
@@ -77,6 +87,9 @@ def validate(df: pd.DataFrame) -> None:
 
 """
 Saves the processed (silver) data to a CSV file
+Parameters:
+    df (pd.DataFrame): The DataFrame to save.
+    path (Path): The path to the output CSV file. Defaults to PROCESSED_FILE.
 """
 def save_processed(df: pd.DataFrame, path: Path = PROCESSED_FILE) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -87,6 +100,11 @@ The function that process the JSON files from the raw data directory,
 transforms them into a DataFrame, 
 validates the data, 
 and saves it to a CSV file in the processed data directory.
+Parameters:
+    raw_dir (Path): The directory containing the raw JSON files. Defaults to RAW_DIR.
+    out_path (Path): The path to the output CSV file. Defaults to PROCESSED_FILE.
+Returns:
+    pd.DataFrame: The processed DataFrame.
 """
 def build_silver(raw_dir: Path = RAW_DIR, out_path: Path = PROCESSED_FILE) -> pd.DataFrame:
     df = to_dataframe(load_raw(raw_dir))

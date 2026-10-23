@@ -8,29 +8,37 @@ The project aims to analyse the exchange rates of the Polish zloty against the e
 
 pip install -r requirements.txt
 
-python main.py
-
 python -m pytest
 
+python main.py
+
+python main.py --skip-download #this commend ignores the downloading process, better to use if JSON files are downloaded
+
+
+
 ## Architecture
-data/raw       bronze: raw JSON files downloaded from https://api.nbp.pl/en.html , each file contains 93 days of the exchange rates
-data/processed silver: cleared data with all currencies, saved to CSV file in column format : date, code, currency, mid
+data/raw       | bronze | raw JSON files downloaded from https://api.nbp.pl/en.html , each file contains 93 days of the exchange rates
+data/processed | silver | cleared data with all currencies, saved to CSV file in column format : date, code, currency, mid
+data/output | gold | two CSV files: one containing the selected currencies and the other containing the minimum, maximum and extreme analysis and plots.
 
 ## Project structure
 ```text
 project/
 ├── data/
 │   ├── raw/                # Raw JSON responses from the NBP API
-│   └── processed/          # Cleaned exchange rates in CSV format
+│   ├── processed/          # Cleaned exchange rates in CSV format
 │   └── output/             # Cleaned data with extreme calculations and currency analysis in CVS format and plots
+│       └── plots/          # Generated plots based on cleaned data from output 
 ├── src/
 │   ├── __init__.py
 │   ├── client.py            # Downloading data from the API
-│   └── transform.py         # Loading, transforming and validating data
-│   └── analysis.py          # Extracting the information and the currencies  
+│   ├── transform.py         # Loading, transforming and validating data
+│   ├── analysis.py          # Extracting the information and the currencies  
+│   └── plots.py 
 ├── tests/
+│   ├── __init__.py
 │   ├── test_client.py
-│   └── test_transform.py
+│   ├── test_transform.py
 │   └── test_analysis.py
 ├── requirements.txt
 ├── main.py

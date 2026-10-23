@@ -63,18 +63,15 @@ def find_extremes(df: pd.DataFrame) -> pd.DataFrame:
     return result.sort_values("code", kind="stable").reset_index(drop=True)
 
 def gold_process(out_path: Path = OUTPUT_FILE,
-                extreme_path: Path = EXTREMES_FILE) -> pd.DataFrame:
+                extreme_path: Path = EXTREMES_FILE) -> tuple[pd.DataFrame, pd.DataFrame]:
     df = load_processed()
     df = select_currencies(df)
     df = add_daily_change(df)
     save_gold(df, out_path)
     results = find_extremes(df)
     save_gold(results, extreme_path)
-    return df
+    return df,results
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     gold_process()
-    #logger.info("Results \t: %s", results)
-    #logger.info("Selected currencies: %s", df["code"].unique())
-    #logger.info("pct_change: %s", df["pct_change"].unique())
