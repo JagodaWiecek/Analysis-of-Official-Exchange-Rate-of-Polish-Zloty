@@ -9,7 +9,6 @@ from pathlib import Path
 import pandas as pd
 
 RAW_DIR = Path(__file__).resolve().parent.parent / "data" / "raw"
-CURRENCIES = ["EUR", "USD", "GBP", "JPY"]
 PROCESSED_DIR = Path(__file__).resolve().parent.parent / "data" / "processed"
 PROCESSED_FILE = PROCESSED_DIR / "rates.csv"
 
@@ -84,12 +83,6 @@ def save_processed(df: pd.DataFrame, path: Path = PROCESSED_FILE) -> None:
     df.to_csv(path, index=False)
 
 """
-Loads the processed data from the CSV file and returns it as a pandas DataFrame.
-"""
-def load_processed(path: Path = PROCESSED_FILE) -> pd.DataFrame:
-    return pd.read_csv(path, parse_dates=["date"])
-
-"""
 The function that process the JSON files from the raw data directory, 
 transforms them into a DataFrame, 
 validates the data, 
@@ -99,10 +92,6 @@ def build_silver(raw_dir: Path = RAW_DIR, out_path: Path = PROCESSED_FILE) -> pd
     df = to_dataframe(load_raw(raw_dir))
     validate(df)
     save_processed(df, out_path)
-    #do wywalenia
-    #logger.info("Silver: %d rows, %d currencies, %s - %s",
-    #            len(df), df["code"].nunique(),
-    #            df["date"].min().date(), df["date"].max().date())
     return df
 
 if __name__ == "__main__":
